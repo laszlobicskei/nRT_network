@@ -17,6 +17,7 @@ proc measure_CC(){     // for measuring CC at various GJ conductancies
 }
 
 //measure_CC()
+/*
 proc inject_sin(){
 	objref g1
 	objref g2
@@ -55,6 +56,7 @@ proc inject_sin(){
 	g3.flush()
 	g4.flush()
 }	
+*/
 
 //inject_sin()
 
