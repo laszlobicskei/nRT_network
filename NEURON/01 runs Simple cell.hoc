@@ -1,0 +1,70 @@
+
+objref cell1
+cell1 = new Vector()
+cell1.record(&MynRT[0].comp[1].v(.5))
+resolution = 0.02
+
+proc measure_CC(){     // for measuring CC at various GJ conductancies
+	
+	for i = 0, 14 {
+	
+		gj1.cond = 0.0005*i
+		gj2.cond = 0.0005*i
+		run()
+		cc = (cell1.x[8000]-cell1.x[16000])/(cell1.x[8000]-cell1.x[16000])*100
+		print "CC:", cc, "%"
+	}
+}
+
+//measure_CC()
+proc inject_sin(){
+	objref g1
+	objref g2
+	objref g3
+	objref g4	
+
+	g1 = new Graph()	
+	g2 = new Graph()
+	g3 = new Graph()
+	g4 = new Graph()
+
+	g1.addexpr("MynRT[0].comp[1].v(0.5)")
+	g2.addexpr("MynRT[1].comp[1].v(0.5)")
+	g3.addexpr("MynRT[0].comp[2].v(0.5)")
+	g4.addexpr("MynRT[1].comp[2].v(0.5)")
+
+
+	g1.begin()
+	g2.begin()
+	g3.begin()
+	g4.begin()
+	finitialize()
+	
+	pi = 3.141592654
+	
+	while (t < tstop) {
+		Cell2_Soma_IC.amp = sin(2*pi*t)-1
+		g1.plot(t)
+		g2.plot(t)
+		g3.plot(t)
+		g4.plot(t)
+		fadvance()
+	}
+	g1.flush()
+	g2.flush()
+	g3.flush()
+	g4.flush()
+}	
+
+//inject_sin()
+
+proc measure_AP_properties(){
+	Cell1_Soma_IC.del = 50
+	Cell1_Soma_IC.dur = 650
+	Cell1_Soma_IC.amp = 0.25
+	
+	run()
+	
+	
+	recordolj vectorokat es merd a full width half max es aztan masokat
+}

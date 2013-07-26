@@ -1,0 +1,4 @@
+load_file("nrngui.hoc")
+load_file("02_Reconstructed_nRT_template.hoc")		//read the template file
+load_file("02_Reconstructed_nRT_simulation.hoc")	// run the actual simulation
+load_file("02_Reconstructed_Main.ses")				// session file only for the pos and loc of windows

@@ -1,0 +1,92 @@
+tstop = 800
+//cvode_active(1)		// variable time_step activated
+
+
+objectvar MynRT[2]
+for i=0,1{
+	MynRT[i] = new nRT()
+}
+
+//--------------------------------------------------------------------------------------
+// Injecting hyper- and depolarising square pulses with variable amplitudes into cell 1 (IV curves)
+//--------------------------------------------------------------------------------------
+objref Cell1_Soma_IC			// a current clamp on the soma of cell1
+nRT[0].soma Cell1_Soma_IC = new IClamp(.5)
+Cell1_Soma_IC.del = 200
+Cell1_Soma_IC.dur = 200
+Cell1_Soma_IC.amp = -0.3
+incr = 0.1
+nr_incr = 10
+
+
+proc run_continously_cell1(){
+	
+	for i=0,nr_incr {
+  		run()
+  		Cell1_Soma_IC.amp += incr 
+	} 
+	Cell1_Soma_IC.amp = -.3
+}
+
+xpanel("Current clamp on the soma")
+xvalue("Delay","Cell1_Soma_IC.del", 1,"", 0, 0 )
+xvalue("Duration","Cell1_Soma_IC.dur", 1,"", 0, 0 )
+xvalue("Amplitude","Cell1_Soma_IC.amp", 1,"", 0, 0 )
+xvalue("Increment","incr", 1,"", 0, 0 )
+xvalue("Nr of Increments","nr_incr", 1,"", 0, 0 )
+xbutton("Run Continously","run_continously_cell1()")
+xpanel(488,799)
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+// Injecting hyper- and depolarising square pulses with variable amplitudes into cell 2 (IV curves)
+//--------------------------------------------------------------------------------------
+objref Cell2_Soma_IC			// a current clamp on the soma of cell1
+nRT[1].soma Cell2_Soma_IC = new IClamp(.5)
+Cell2_Soma_IC.del = 200
+Cell2_Soma_IC.dur = 200
+Cell2_Soma_IC.amp = -0.3
+incr = 0.1
+nr_incr = 10
+
+
+proc run_continously_cell2(){
+	
+	for i=0,nr_incr {
+  		run()
+  		Cell2_Soma_IC.amp += incr 
+	} 
+	Cell2_Soma_IC.amp = -.3
+}
+
+xpanel("Current clamp on the soma")
+xvalue("Delay","Cell2_Soma_IC.del", 1,"", 0, 0 )
+xvalue("Duration","Cell2_Soma_IC.dur", 1,"", 0, 0 )
+xvalue("Amplitude","Cell2_Soma_IC.amp", 1,"", 0, 0 )
+xvalue("Increment","incr", 1,"", 0, 0 )
+xvalue("Nr of Increments","nr_incr", 1,"", 0, 0 )
+xbutton("Run Continously","run_continously_cell2()")
+xpanel(1242,799)
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
+
+
+//--------------------------------------------------------------------------------------
+// Connecting two cells with gap junctions
+//--------------------------------------------------------------------------------------
+objref gj1, gj2			// gj1 and gj2 are the two "ends" of one GJ, gj1 on cell1, gj2 on cell2
+
+nRT[0].dend[5] gj1 = new Gap(.5)
+gj1.cond = 0.007
+nRT[1].dend[5] gj2 = new Gap(.5)
+gj2.cond = 0.007
+
+setpointer gj1.vgap, nRT[1].dend[5].v(0.5)
+setpointer gj2.vgap, nRT[0].dend[5].v(0.5) 
+//--------------------------------------------------------------------------------------
+
+xpanel("GJ cond")
+xvalue("Conductance[S] 1->2","gj1.cond", 1,"", 0, 0 )
+xvalue("Conductance[S] 2->1","gj2.cond", 1,"", 0, 0 )
+xpanel(31,442)
