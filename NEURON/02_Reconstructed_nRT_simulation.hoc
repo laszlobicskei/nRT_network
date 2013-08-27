@@ -1,11 +1,21 @@
-tstop = 800
 //cvode_active(1)		// variable time_step activated
 
+dt = 0.025
 
 objectvar MynRT[2]
 for i=0,1{
 	MynRT[i] = new nRT()
 }
+
+objref mempot, bin
+mempot = new Vector()
+bin = new Vector()
+mempot.record(&nRT[0].soma.v(0.5))
+
+func time(){
+	return $1/dt
+}
+
 
 //--------------------------------------------------------------------------------------
 // Injecting hyper- and depolarising square pulses with variable amplitudes into cell 1 (IV curves)
@@ -13,9 +23,9 @@ for i=0,1{
 objref Cell1_Soma_IC			// a current clamp on the soma of cell1
 nRT[0].soma Cell1_Soma_IC = new IClamp(.5)
 Cell1_Soma_IC.del = 200
-Cell1_Soma_IC.dur = 200
-Cell1_Soma_IC.amp = -0.3
-incr = 0.1
+Cell1_Soma_IC.dur = 1000
+Cell1_Soma_IC.amp = 0
+incr = 0.04
 nr_incr = 10
 
 
@@ -23,6 +33,9 @@ proc run_continously_cell1(){
 	
 	for i=0,nr_incr {
   		run()
+  		bin.spikebin(mempot, 0)		// Counting the spikes
+  		print "Current:", Cell1_Soma_IC.amp, "nA Rin:", (mempot.x[time(200)]-mempot.x[time(1200)])/Cell1_Soma_IC.amp
+  		print "Nr of Spikes:", bin.sum()
   		Cell1_Soma_IC.amp += incr 
 	} 
 	Cell1_Soma_IC.amp = -.3
@@ -35,7 +48,7 @@ xvalue("Amplitude","Cell1_Soma_IC.amp", 1,"", 0, 0 )
 xvalue("Increment","incr", 1,"", 0, 0 )
 xvalue("Nr of Increments","nr_incr", 1,"", 0, 0 )
 xbutton("Run Continously","run_continously_cell1()")
-xpanel(488,799)
+xpanel(495,920)
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
 
@@ -45,10 +58,8 @@ xpanel(488,799)
 objref Cell2_Soma_IC			// a current clamp on the soma of cell1
 nRT[1].soma Cell2_Soma_IC = new IClamp(.5)
 Cell2_Soma_IC.del = 200
-Cell2_Soma_IC.dur = 200
+Cell2_Soma_IC.dur = 1000
 Cell2_Soma_IC.amp = -0.3
-incr = 0.1
-nr_incr = 10
 
 
 proc run_continously_cell2(){
@@ -67,7 +78,7 @@ xvalue("Amplitude","Cell2_Soma_IC.amp", 1,"", 0, 0 )
 xvalue("Increment","incr", 1,"", 0, 0 )
 xvalue("Nr of Increments","nr_incr", 1,"", 0, 0 )
 xbutton("Run Continously","run_continously_cell2()")
-xpanel(1242,799)
+xpanel(1129,919)
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
 
@@ -77,16 +88,60 @@ xpanel(1242,799)
 //--------------------------------------------------------------------------------------
 objref gj1, gj2			// gj1 and gj2 are the two "ends" of one GJ, gj1 on cell1, gj2 on cell2
 
-nRT[0].dend[5] gj1 = new Gap(.5)
+nRT[0].dend[0] gj1 = new Gap(.5)
 gj1.cond = 0.007
-nRT[1].dend[5] gj2 = new Gap(.5)
+nRT[1].dend[0] gj2 = new Gap(.5)
 gj2.cond = 0.007
 
-setpointer gj1.vgap, nRT[1].dend[5].v(0.5)
-setpointer gj2.vgap, nRT[0].dend[5].v(0.5) 
+setpointer gj1.vgap, nRT[1].dend[0].v(0.5)
+setpointer gj2.vgap, nRT[0].dend[0].v(0.5) 
 //--------------------------------------------------------------------------------------
 
+
+
+
+//--------------------------------------------------------------------------------------
+// A panel for adjusting the conductance
+//--------------------------------------------------------------------------------------
+proc modifyConductance() {
+	gj1.cond = (0.007/21)*cc
+	gj2.cond = gj1.cond
+}
+
+cc = 20
 xpanel("GJ cond")
-xvalue("Conductance[S] 1->2","gj1.cond", 1,"", 0, 0 )
-xvalue("Conductance[S] 2->1","gj2.cond", 1,"", 0, 0 )
-xpanel(31,442)
+xvalue("CC[%]","cc", 1,"modifyConductance()", 0, 0 )
+xpanel(1,568)
+
+
+
+
+
+//--------------------------------------------------------------------------------------
+// Measuring the time constant
+//--------------------------------------------------------------------------------------
+objref relevant
+proc measureTimeConstant() {
+	
+	for cc=0,20 {
+		modifyConductance()
+  		run()
+  		relevant = mempot.at(time(200))
+		time_constant = relevant.indwhere("<=", (relevant.min()-relevant.x[0])*0.632 + relevant.x[0]) * dt
+		print time_constant 
+	} 
+}
+
+
+
+
+//--------------------------------------------------------------------------------------
+// Measuring Rin
+//--------------------------------------------------------------------------------------
+proc measureRin() {	
+	for cc=0,20 {
+		modifyConductance()
+  		run()
+		print (mempot.x[time(200)]-mempot.x[time(1200)])/Cell1_Soma_IC.amp
+	} 
+}

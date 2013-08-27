@@ -28,6 +28,7 @@ Cell1_Soma_IC.amp = 0
 incr = 0.04
 nr_incr = 10
 
+
 proc run_continously_cell1(){
 	
 	for i=0,nr_incr {
