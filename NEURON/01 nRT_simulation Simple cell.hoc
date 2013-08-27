@@ -10,7 +10,7 @@ for i=0,1{
 objref mempot, bin
 mempot = new Vector()
 bin = new Vector()
-mempot.record(&MynRT[0].comp[1].v(.5))
+mempot.record(&MynRT[0].soma.v(0.5))
 
 func time(){
 	return $1/dt
@@ -21,7 +21,7 @@ func time(){
 // Injecting hyper- and depolarising square pulses with variable amplitudes into cell 1 (IV curves)
 //--------------------------------------------------------------------------------------
 objref Cell1_Soma_IC			// a current clamp on the soma of cell1
-MynRT[0].comp[1] Cell1_Soma_IC = new IClamp(.5)
+MynRT[0].soma Cell1_Soma_IC = new IClamp(.5)
 Cell1_Soma_IC.del = 200
 Cell1_Soma_IC.dur = 1000
 Cell1_Soma_IC.amp = 0
@@ -55,7 +55,7 @@ xpanel(495,920)
 // Injecting hyper- and depolarising square pulses with variable amplitudes into cell 2 (IV curves)
 //--------------------------------------------------------------------------------------
 objref Cell2_Soma_IC			// a current clamp on the soma of cell1
-MynRT[1].comp[1] Cell2_Soma_IC = new IClamp(.5)
+MynRT[1].soma Cell2_Soma_IC = new IClamp(.5)
 Cell2_Soma_IC.del = 200
 Cell2_Soma_IC.dur = 1000
 Cell2_Soma_IC.amp = -0.3
@@ -87,13 +87,13 @@ xpanel(1129,919)
 //--------------------------------------------------------------------------------------
 objref gj1, gj2			// gj1 and gj2 are the two "ends" of one GJ, gj1 on cell1, gj2 on cell2
 
-MynRT[0].comp[2] gj1 = new Gap(.5)
+MynRT[0].dend[0] gj1 = new Gap(.5)
 gj1.cond = 0.007
-MynRT[1].comp[2] gj2 = new Gap(.5)
+MynRT[1].dend[0] gj2 = new Gap(.5)
 gj2.cond = 0.007
 
-setpointer gj1.vgap, MynRT[1].comp[2].v(0.5)
-setpointer gj2.vgap, MynRT[0].comp[2].v(0.5) 
+setpointer gj1.vgap, MynRT[1].dend[0].v(0.5)
+setpointer gj2.vgap, MynRT[0].dend[0].v(0.5) 
 //--------------------------------------------------------------------------------------
 
 

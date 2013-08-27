@@ -1,7 +1,7 @@
 
 objref cell1
 cell1 = new Vector()
-cell1.record(&MynRT[0].comp[1].v(.5))
+cell1.record(&MynRT[0].soma.v(.5))
 resolution = 0.02
 
 proc measure_CC(){     // for measuring CC at various GJ conductancies
@@ -29,10 +29,10 @@ proc inject_sin(){
 	g3 = new Graph()
 	g4 = new Graph()
 
-	g1.addexpr("MynRT[0].comp[1].v(0.5)")
-	g2.addexpr("MynRT[1].comp[1].v(0.5)")
-	g3.addexpr("MynRT[0].comp[2].v(0.5)")
-	g4.addexpr("MynRT[1].comp[2].v(0.5)")
+	g1.addexpr("MynRT[0].soma.v(0.5)")
+	g2.addexpr("MynRT[1].soma.v(0.5)")
+	g3.addexpr("MynRT[0].dend[0].v(0.5)")
+	g4.addexpr("MynRT[1].dend[0].v(0.5)")
 
 
 	g1.begin()

@@ -45,7 +45,7 @@ scene_vector_[3] = save_window_
 {save_window_.view(0, -110, 1400, 150, 913, 22, 460.8, 312.4)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
-save_window_.addvar("MynRT[1].comp[1].v( 0.5 )", 1, 1, 0.734033, 0.907481, 2)
+save_window_.addvar("MynRT[1].soma.v( 0.5 )", 1, 1, 0.734033, 0.907481, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -54,7 +54,7 @@ scene_vector_[4] = save_window_
 {save_window_.view(0, -110, 1400, 150, 301, 24, 441.9, 312.4)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
-save_window_.addvar("MynRT[0].comp[1].v( 0.5 )", 1, 1, 0.745783, 0.904975, 2)
+save_window_.addvar("MynRT[0].soma.v( 0.5 )", 1, 1, 0.745783, 0.904975, 2)
 }
 {
 save_window_ = new Graph(0)

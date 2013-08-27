@@ -1,6 +1,5 @@
 load_file("nrngui.hoc")
-load_file("hoc/traubcon.hoc")					// a file containing procedures that are needed in the template file
-load_file("cells/nRT_template.hoc")				// read the template file
+load_file("01_Converted_Traub_nRT_template.hoc")	// read the template file
 load_file("01 nRT_simulation Simple cell.hoc")	// run the actual simulation
 load_file("01 Main Simple cell.ses")			// session file only for the pos and loc of windows
 load_file("01 runs Simple cell.hoc")			

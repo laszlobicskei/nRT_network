@@ -1,0 +1,276 @@
+begintemplate nRT
+	
+	public soma, dend, axon, all, physio_sec, anatomy_sec
+	create soma, dend[52], axon[6]
+	
+	proc init() {
+	  topol()
+	  subsets()
+	  geom()
+	  biophys()
+	  geom_nseg()
+	}
+		
+	proc topol() { local i
+		connect dend[0](0), soma(1)
+		connect dend[13](0), soma(1)
+		connect dend[26](0), soma(1)
+		connect dend[39](0), soma(1)
+		
+		for i = 1, 2 connect dend[i](0), dend[0](1)
+		for i = 3, 4 connect dend[i](0), dend[1](1)
+		connect dend[5](0), dend[2](1)
+		connect dend[8](0), dend[5](1)
+		connect dend[6](0), dend[3](1)
+		connect dend[7](0), dend[4](1)
+		connect dend[9](0), dend[6](1)
+		connect dend[10](0), dend[9](1)
+		connect dend[11](0), dend[10](1)
+		connect dend[12](0), dend[11](1)
+		
+		for i = 14, 15 connect dend[i](0), dend[13](1)
+		for i = 16, 17 connect dend[i](0), dend[14](1)
+		connect dend[18](0), dend[15](1)
+		connect dend[21](0), dend[18](1)
+		connect dend[19](0), dend[16](1)
+		connect dend[20](0), dend[17](1)
+		connect dend[22](0), dend[19](1)
+		connect dend[23](0), dend[22](1)
+		connect dend[24](0), dend[23](1)
+		connect dend[25](0), dend[24](1)
+		
+		for i = 27, 28 connect dend[i](0), dend[26](1)
+		for i = 29, 30 connect dend[i](0), dend[27](1)
+		connect dend[31](0), dend[28](1)
+		connect dend[34](0), dend[31](1)
+		connect dend[32](0), dend[29](1)
+		connect dend[33](0), dend[30](1)
+		connect dend[35](0), dend[32](1)
+		connect dend[36](0), dend[35](1)
+		connect dend[37](0), dend[36](1)
+		connect dend[38](0), dend[37](1)
+		
+		for i = 40, 41 connect dend[i](0), dend[39](1)
+		for i = 42, 43 connect dend[i](0), dend[40](1)
+		connect dend[44](0), dend[41](1)
+		connect dend[47](0), dend[44](1)
+		connect dend[45](0), dend[42](1)
+		connect dend[46](0), dend[43](1)
+		connect dend[48](0), dend[45](1)
+		connect dend[49](0), dend[48](1)
+		connect dend[50](0), dend[49](1)
+		connect dend[51](0), dend[50](1)
+	
+		connect axon[0](0), soma(0)
+		connect axon[1](0), axon[0](1)
+		connect axon[2](0), axon[1](1)
+		connect axon[3](0), axon[2](1)
+		connect axon[4](0), axon[1](1)
+		connect axon[5](0), axon[4](1)
+	}
+
+	
+	objref all, physio_sec[4], anatomy_sec[3]
+	
+	proc subsets() { local i
+		objref all, physio_sec[4], anatomy_sec[3]
+		
+		all = new SectionList()
+		soma all.append()
+		for i=0, 51 dend[i] all.append()
+		for i=0, 5 axon[i] all.append()
+			
+		for i=0, 3 physio_sec[i] = new SectionList()
+		
+		for i=0, 5 axon[i] physio_sec[0].append()
+		
+		soma physio_sec[1].append()
+		
+		for i=0, 2 dend[i] physio_sec[2].append()
+		for i=13, 15 dend[i] physio_sec[2].append()
+		for i=26, 28 dend[i] physio_sec[2].append()
+		for i=39, 41 dend[i] physio_sec[2].append()		
+		
+		for i=3,12 dend[i] physio_sec[3].append()
+		for i=16,25 dend[i] physio_sec[3].append()
+		for i=29,38 dend[i] physio_sec[3].append()
+		for i=42,51 dend[i] physio_sec[3].append()
+		
+		for i=0,2 anatomy_sec[i] = new SectionList()
+		
+		dend[0] anatomy_sec[0].append()
+		dend[13] anatomy_sec[0].append()
+		dend[26] anatomy_sec[0].append()
+		dend[39] anatomy_sec[0].append()
+		
+		for i=1, 2 dend[i] anatomy_sec[1].append()
+		for i=14, 15 dend[i] anatomy_sec[1].append()
+		for i=27, 28 dend[i] anatomy_sec[1].append()
+		for i=40, 41 dend[i] anatomy_sec[1].append()	
+		
+		dend[5] anatomy_sec[1].append()
+		dend[18] anatomy_sec[1].append()
+		dend[31] anatomy_sec[1].append()
+		dend[44] anatomy_sec[1].append()
+		
+		dend[8] anatomy_sec[1].append()
+		dend[21] anatomy_sec[1].append()
+		dend[34] anatomy_sec[1].append()
+		dend[47] anatomy_sec[1].append()
+		
+		for i=3, 4 dend[i] anatomy_sec[2].append()
+		for i=16, 17 dend[i] anatomy_sec[2].append()
+		for i=29, 30 dend[i] anatomy_sec[2].append()
+		for i=42, 43 dend[i] anatomy_sec[2].append()	
+		
+		for i=6, 7 dend[i] anatomy_sec[2].append()
+		for i=19, 20 dend[i] anatomy_sec[2].append()
+		for i=32, 33 dend[i] anatomy_sec[2].append()
+		for i=45, 46 dend[i] anatomy_sec[2].append()	
+		
+		for i=9, 12 dend[i] anatomy_sec[2].append()
+		for i=22, 25 dend[i] anatomy_sec[2].append()
+		for i=35, 38 dend[i] anatomy_sec[2].append()
+		for i=48, 51 dend[i] anatomy_sec[2].append()		
+	}
+
+	proc geom() {
+		soma { L=  30. diam = 2*  9.34 }
+		
+		forsec anatomy_sec[0] { L=  75. diam = 2*  1.06 }
+		forsec anatomy_sec[1] { L=  75. diam = 2*  0.666666667 }
+		forsec anatomy_sec[2] { L=  75. diam = 2*  0.418972332 }
+		
+		forsec physio_sec[0] { L= 50. diam = 2* 0.5}		// axon segments
+		axon[0] diam = 2* 0.8
+		axon[1] diam = 2* 0.7
+	}
+
+	proc geom_nseg() {
+	}
+
+	proc biophys() {
+	
+		 forsec all { 
+			insert pas 
+			cm =   1.  					// assign global specific capac.
+			g_pas =   5.E-05			// g_pas and Ra is different for the axon, changed below
+			Ra =   250.
+
+		 }
+		 
+		 forsec physio_sec[0] {  			// axon
+				g_pas =   0.001
+				Ra =   100.
+			   insert naf2
+			   gbar_naf2 =   0.4
+			   insert kdr_fs
+			   gbar_kdr_fs =   0.4
+			   insert ka
+			   gbar_ka =   0.001
+			   insert k2
+			   gbar_k2 =   0.0005
+		 }
+		 forsec physio_sec[1] {				// soma
+			   insert naf2
+			   gbar_naf2 =   0.06
+			   insert napf
+			   gbar_napf =   0.0006
+			   insert kdr_fs
+			   gbar_kdr_fs =   0.06
+			   insert kc
+			   gbar_kc =   0.01
+			   insert ka
+			   gbar_ka =   0.005
+			   insert km
+			   gbar_km =   0.0005
+			   insert k2
+			   gbar_k2 =   0.0005
+			   insert kahp_slower
+			   gbar_kahp_slower =   0.0001
+			   insert cal
+			   gbar_cal =   0.0005
+			   insert cat_a
+			   gbar_cat_a =   5.E-05
+			   insert ar
+			   gbar_ar =   2.5E-05
+			   insert cad
+			   // *** ca diffusion: beta=1/tau
+			   beta_cad  =   0.02
+			   // cafor(I) (FORTRAN) converted to phi (NEURON)
+			   phi_cad =   10400.
+		 }
+		 forsec physio_sec[2]{				
+			   insert naf2
+			   gbar_naf2 =   0.06
+			   insert napf
+			   gbar_napf =   0.0006
+			   insert kdr_fs
+			   gbar_kdr_fs =   0.06
+			   insert kc
+			   gbar_kc =   0.01
+			   insert ka
+			   gbar_ka =   0.005
+			   insert km
+			   gbar_km =   0.0005
+			   insert k2
+			   gbar_k2 =   0.0005
+			   insert kahp_slower
+			   gbar_kahp_slower =   0.0001
+			   insert cal
+			   gbar_cal =   0.0005
+			   insert cat_a
+			   gbar_cat_a =   5.E-05
+			   insert ar
+			   gbar_ar =   2.5E-05
+			   insert cad
+			   // *** ca diffusion: beta=1/tau
+			   beta_cad  =   0.05
+			   // cafor(I) (FORTRAN) converted to phi (NEURON)
+			   phi_cad =   260000.
+		 }
+		 forsec physio_sec[3] {
+			   insert naf2
+			   gbar_naf2 =   0.01
+			   insert napf
+			   gbar_napf =   0.0001
+			   insert kdr_fs
+			   gbar_kdr_fs =   0.01
+			   insert kc
+			   gbar_kc =   0.01
+			   insert ka
+			   gbar_ka =   0.001
+			   insert km
+			   gbar_km =   0.0005
+			   insert k2
+			   gbar_k2 =   0.0005
+			   insert kahp_slower
+			   gbar_kahp_slower =   0.0001
+			   insert cal
+			   gbar_cal =   0.0005
+			   insert cat_a
+			   gbar_cat_a =   0.002
+			   insert ar
+			   gbar_ar =   2.5E-05
+			   insert cad
+			   // *** ca diffusion: beta=1/tau
+			   beta_cad  =   0.05
+			   // cafor(I) (FORTRAN) converted to phi (NEURON)
+			   phi_cad =   260000.
+		 }
+		 
+		 ceiling_cad = 1e6 				//  nearly unlimited Ca concentration
+		 forsec all {                   // global reversal potentials
+			ek =  -100.
+			e_pas =  -75.
+			ena =   50.
+			vca =   125.
+			forsec all if (ismembrane("ar")) erev_ar =  -40.
+			e_gaba_a =  -75.
+		 }
+		 
+		 forsec all if (ismembrane("ar")) { m0_ar = 0 }
+	}
+	access soma
+	
+endtemplate nRT
