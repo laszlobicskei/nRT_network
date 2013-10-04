@@ -1,6 +1,6 @@
 begintemplate nRT
 	
-	public soma, dend, axon
+	public soma, dend, axon, all
 	create soma, dend[80], axon[3]
 	
 	proc init() {
@@ -74,7 +74,7 @@ begintemplate nRT
 		pt3dadd(-25, 0.625, 19, 8.004)
 		pt3dadd(-25.5, 1, 18, 5)
 		pt3dadd(-26, 0.75, 17.5, 2.5)
-		pt3dadd(-26, 1.5, 16.5, 0)
+		pt3dadd(-26, 1.5, 16.5, 0.1)
 	  }
 	  dend {pt3dclear()
 		pt3dadd(-26, 1.5, 16.5, 1.7)
@@ -1936,6 +1936,8 @@ begintemplate nRT
 			forsec all if (ismembrane("ar")) erev_ar =  -40.
 			e_gaba_a =  -75.
 		 }
+		 
+		 forsec all if (ismembrane("ar")) { m0_ar = 0 }
 	}
 	access soma
 	
