@@ -1,0 +1,5 @@
+IV Art x.dat - Voltage responses for different current injections in single cell with artificial morphology
+IV Art.mat - the previous dat files imported to Matlab
+
+IV Recon x.dat - Voltage responses for different current injections in single cell with the reconstructed morphology
+IV Recon.mat - the previous dat files imported to Matlab
