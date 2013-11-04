@@ -1,7 +1,7 @@
 begintemplate nRT
 	
-	public soma, dend, axon, all
-	create soma, dend[80], axon[3]
+	public soma, dend, axon, all, level
+	create soma, dend[80], axon[6]
 	
 	proc init() {
 	  topol()
@@ -52,7 +52,11 @@ begintemplate nRT
 	  for i = 76, 77 connect dend[i](0), dend[74](1)
 	  for i = 78, 79 connect dend[i](0), dend[76](1)
 	  connect axon[0](0), soma(0)
-	  for i = 1, 2 connect axon[i](0), axon[0](1)
+	  connect axon[1](0), axon[0](1)
+      connect axon[2](0), axon[1](1)
+	  connect axon[3](0), axon[2](1)
+	  connect axon[4](0), axon[1](1)
+	  connect axon[5](0), axon[4](1)
 	  basic_shape()
 	}
 	proc shape3d_1() {
@@ -1763,9 +1767,6 @@ begintemplate nRT
 	  shape3d_6()
 	  shape3d_7()
 	  shape3d_8()
-	  axon[0] {pt3dclear() pt3dadd(-9, -1, 0, 1) pt3dadd(60, 0, 0, 1)}
-	  axon[1] {pt3dclear() pt3dadd(60, 0, 0, 1) pt3dadd(75, 15, 0, 1)}
-	  axon[2] {pt3dclear() pt3dadd(60, 0, 0, 1) pt3dadd(75, -14, 0, 1)}
 	}
 	
 	objref all, level[5]
@@ -1775,20 +1776,28 @@ begintemplate nRT
 		all = new SectionList()
 		soma all.append()
 		for i=0, 79 dend[i] all.append()
-		for i=0, 2 axon[i] all.append()
+		for i=0, 5 axon[i] all.append()
 		
 		for i=0,4 level[i] = new SectionList()
 		
 		soma level[1].append()
-		for i=0, 2 axon[i] level[0].append()
+		for i=0, 5 axon[i] level[0].append()
 		for i=0,3 dend[i] level[2].append()
 		for i=4,11 dend[i] level[3].append()
 		for i=12,79 dend[i] level[4].append()
 	
 	}
 	proc geom() {
+		forsec level[0]  { L= 10. diam = 2* 0.5}	//axon segments
+		axon[0] { L= 50. diam = 2* 0.8}
+		axon[1] { L= 50. diam = 2* 0.7}
+	}
+	func lambda_f() {
+		return 1e5*sqrt(diam/(4*PI*$1*Ra*cm))
 	}
 	proc geom_nseg() {
+		//lambda_f(1000) folott mar nincs valtozas
+		forall {nseg = int((L/(0.1*lambda_f(100))+0.9)/2)*2+1}
 	}
 	proc biophys() {
 	
@@ -1933,12 +1942,13 @@ begintemplate nRT
 			e_pas =  -75.
 			ena =   50.
 			vca =   125.
-			forsec all if (ismembrane("ar")) erev_ar =  -40.
+			if (ismembrane("ar")) {
+				erev_ar =  -40.
+				m0_ar = 0
+			}
 			e_gaba_a =  -75.
 		 }
-		 
-		 forsec all if (ismembrane("ar")) { m0_ar = 0 }
 	}
 	access soma
-	
+
 endtemplate nRT

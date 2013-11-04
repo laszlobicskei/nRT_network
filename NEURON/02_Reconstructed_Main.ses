@@ -6,7 +6,7 @@ objectvar ocbox_, ocbox_list_, scene_, scene_list_
 {pwman_place(0,0,0)}
 {
 xpanel("RunControl", 0)
-v_init = -70
+v_init = -75.3
 xvalue("Init","v_init", 1,"stdinit()", 1, 1 )
 xbutton("Init & Run","run()")
 xbutton("Stop","stoprun=1")

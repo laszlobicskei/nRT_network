@@ -1,4 +1,15 @@
 load_file("nrngui.hoc")
-load_file("02_Reconstructed_nRT_template.hoc")		//read the template file
+load_file("02_Reconstructed_nRT_template.hoc")		// read the template file
 load_file("02_Reconstructed_nRT_simulation.hoc")	// run the actual simulation
 load_file("02_Reconstructed_Main.ses")				// session file only for the pos and loc of windows
+
+//Temporary settings:
+tstop = 400
+cc=0
+modifyConductance()
+Cell1_Soma_IC.del = 50
+Cell1_Soma_IC.dur = 200
+Cell2_Soma_IC.del = 50
+Cell2_Soma_IC.dur = 200
+
+

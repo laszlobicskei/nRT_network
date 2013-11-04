@@ -141,9 +141,9 @@ begintemplate nRT
 		forsec anatomy_sec[1] { L=  75. diam = 2*  0.666666667 }
 		forsec anatomy_sec[2] { L=  75. diam = 2*  0.418972332 }
 		
-		forsec physio_sec[0] { L= 50. diam = 2* 0.5}		// axon segments
-		axon[0] diam = 2* 0.8
-		axon[1] diam = 2* 0.7
+		forsec physio_sec[0] { L= 10. diam = 2* 0.5}	//axon segments
+		axon[0] { L= 50. diam = 2* 0.8}
+		axon[1] { L= 50. diam = 2* 0.7}
 	}
 
 	proc geom_nseg() {
