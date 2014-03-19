@@ -1,6 +1,6 @@
 injected_current = '-300';   % The string that goes to the figures title
-art_filename = 'artm300';    % The name of the file that holds the data for the artificial morphology
-recon_filename = 'recm300';  % The name of the file that holds the data for the reconstructed morphology
+art_filename = 'art';    % The name of the file that holds the data for the artificial morphology
+recon_filename = 'rec80';  % The name of the file that holds the data for the reconstructed morphology
 
 %% Import data from text file.
 % Script for importing data from the following text file:

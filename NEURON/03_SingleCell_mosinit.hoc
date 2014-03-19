@@ -1,0 +1,38 @@
+load_file("nrngui.hoc")
+load_file("02_Reconstructed_nRT_template.hoc")		// read the template file
+celsius = 37
+load_file("03_SingleCell_simulation.hoc")			// run the actual simulation
+load_file("03_SingleCell_Main.ses")				// session file only for the pos and loc of windows
+load_file("03_SingleCell_conductance_panels.hoc")
+//load_file("03_SingleCell_VClamp.hoc")
+
+
+/*
+proc init() {	
+	finitialize(v_init)
+	svstate.restore()
+	t=0
+	if (cvode.active()) {
+		cvode.re_init()
+	} else {
+		fcurrent()
+	}
+	frecord_init()
+}
+//---------------------------------------------------------
+// To be able to run the init proc without saved states
+//---------------------------------------------------------
+finitialize(v_init)
+fcurrent()
+svstate = new SaveState()
+svstate.save()*/
+dt = 0.025
+setdt()
+
+xpanel("Comand Panel",0)
+xmenu()
+xbutton("Conductances","conductancesPanel()")
+xbutton("Perturbation","perturbationPanel()")
+xbutton("Current clamp","currentClampPanel()")
+xmenu()
+xpanel(1369,57,0)

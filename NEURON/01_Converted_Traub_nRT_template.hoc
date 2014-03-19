@@ -60,7 +60,7 @@ begintemplate nRT
 		connect dend[49](0), dend[48](1)
 		connect dend[50](0), dend[49](1)
 		connect dend[51](0), dend[50](1)
-	
+
 		connect axon[0](0), soma(0)
 		connect axon[1](0), axon[0](1)
 		connect axon[2](0), axon[1](1)

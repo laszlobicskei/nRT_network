@@ -145,3 +145,19 @@ proc measureRin() {
 		print (mempot.x[time(200)]-mempot.x[time(1200)])/Cell1_Soma_IC.amp
 	} 
 }
+
+
+
+//--------------------------------------------------------------------------------------
+// Injecting current ramp for bistability
+//--------------------------------------------------------------------------------------
+proc currentRamp() {
+	Cell2_Soma_IC.del = 0
+	Cell2_Soma_IC.dur = 200000
+	for i=1,200 {
+		Cell2_Soma_IC.amp = 0.005 * i
+		while (t<i*1000) {
+			fadvance()
+		}
+	}
+}

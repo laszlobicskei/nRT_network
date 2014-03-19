@@ -1,0 +1,124 @@
+begintemplate nRT
+	
+	public soma
+	create soma
+	
+	proc init() {
+	  topol()
+	  subsets()
+	  geom()
+	  biophys()
+	  geom_nseg()
+	  soma_correction()
+	}
+		
+	proc topol() { local i
+	  basic_shape()
+	}
+	proc shape3d_1() {
+	  soma {pt3dclear()
+		pt3dadd(-10, -1.5, 20.75, 21.29)
+		pt3dadd(-11.5, -1.75, 21.75, 20.556)
+		pt3dadd(-12, -2, 21, 20.024)
+		pt3dadd(-13, -1.917, 20.5, 19.832)
+		pt3dadd(-14.5, -1.792, 18.5, 19.988)
+		pt3dadd(-15, -1.75, 18.5, 19.906)
+		pt3dadd(-16.5, -1.5, 18.625, 19.47)
+		pt3dadd(-18, -1.438, 18.75, 18.676)
+		pt3dadd(-18.5, -1.35, 18.75, 18.264)
+		pt3dadd(-20.5, -1.25, 18.75, 16.14)
+		pt3dadd(-22, -0.625, 18.75, 13.52)
+		pt3dadd(-22.5, -0.5, 18.833, 12.876)
+		pt3dadd(-23.5, -0.25, 19, 11.63)
+		pt3dadd(-24.5, 0.25, 19, 9.862)
+		pt3dadd(-25, 0.625, 19, 8.004)
+		pt3dadd(-25.5, 1, 18, 5)
+		pt3dadd(-26, 0.75, 17.5, 2.5)
+		pt3dadd(-26, 1.5, 16.5, 0.1)
+	  }
+	}
+	proc basic_shape() {
+	  shape3d_1()
+	}
+	
+	objref all, level[5]
+	proc subsets() { local i
+		objref all, level[5]
+		
+		all = new SectionList()
+		soma all.append()
+		
+		for i=0,4 level[i] = new SectionList()
+		
+		soma level[1].append()
+	}
+	proc geom() {
+	}
+	func lambda_f() {
+		return 1e5*sqrt(diam/(4*PI*$1*Ra*cm))
+	}
+	proc geom_nseg() {
+		//lambda_f(1000) folott mar nincs valtozas
+		forall {nseg = int((L/(0.1*lambda_f(100))+0.9)/2)*2+1}
+	}
+	proc biophys() {
+	
+		 forsec all { 
+			insert pas 
+			cm =   1.  					// assign global specific capac.
+			g_pas =   5.E-05			// g_pas and Ra is different for the axon, changed below
+			Ra =   250.
+		 }
+		 
+		 
+		 forsec level[ 1] {				// soma
+			   insert naf2
+			   gbar_naf2 =   0.06
+			   insert napf
+			   gbar_napf =   0.0006
+			   insert kdr_fs
+			   gbar_kdr_fs =   0.06
+			   insert kc
+			   gbar_kc =   0.01
+			   insert ka
+			   gbar_ka =   0.005
+			   insert km
+			   gbar_km =   0.0005
+			   insert k2
+			   gbar_k2 =   0.0005
+			   insert kahp_slower
+			   gbar_kahp_slower =   0.0001
+			   insert cal
+			   gbar_cal =   0.0005
+			   insert cat_a
+			   gbar_cat_a =   5.E-05
+			   insert ar
+			   gbar_ar =   2.5E-05
+			   insert cad
+			   // *** ca diffusion: beta=1/tau
+			   beta_cad  =   0.02
+			   // cafor(I) (FORTRAN) converted to phi (NEURON)
+			   phi_cad =   10400.
+		 }
+		 
+		 ceiling_cad = 1e6 				//  nearly unlimited Ca concentration
+		 forsec all {                   // global reversal potentials
+			ek =  -100.
+			e_pas =  -75.6
+			ena =   50.
+			vca =   125.
+			forsec all if (ismembrane("ar")) erev_ar =  -40.
+			e_gaba_a =  -75.
+		 }
+		 
+		 forsec all if (ismembrane("ar")) { m0_ar = 0 }
+	}
+	
+	proc soma_correction() {
+		soma.diam = 30
+		soma.L = 30
+	}
+	
+	access soma
+
+endtemplate nRT

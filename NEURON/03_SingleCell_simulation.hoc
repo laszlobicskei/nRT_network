@@ -1,0 +1,122 @@
+cvode_active(1)		// variable time_step activated
+
+objectvar cell
+cell = new nRT()
+access cell.soma
+
+objref mempot, bin
+mempot = new Vector()		// to record Vm
+bin = new Vector()			// to count spikes
+//mempot.record(&cell.soma.v(.5))	
+	
+func time(){
+	return $1/dt
+}
+
+//--------------------------------------------------------------------------------------
+// Injecting hyper- and depolarising square pulses with variable amplitudes into cell 1 (IV curves)
+//--------------------------------------------------------------------------------------
+objref Soma_IC			// a current clamp on the soma of cell1
+Soma_IC = new IClamp(.5)
+Soma_IC.del = 200
+Soma_IC.dur = 1000
+Soma_IC.amp = 0
+
+proc currentClampPanel() {
+	xpanel("Current clamp on the soma")
+	xvalue("Delay","Soma_IC.del", 1,"", 0, 0 )
+	xvalue("Duration","Soma_IC.dur", 1,"", 0, 0 )
+	xvalue("Amplitude","Soma_IC.amp", 1,"", 0, 0 )
+	xpanel(1,570)
+}
+
+//--------------------------------------------------------------------------------------
+// Injecting current ramp for bistability
+//--------------------------------------------------------------------------------------
+objref svstate,f
+proc currentRamp() {
+	//$1: from[pA] $2: to[pA]
+	Soma_IC.del = 0
+	Soma_IC.dur = 3000000
+	tstop = Soma_IC.dur
+	finitialize(v_init)
+	fcurrent()
+	strdef filename
+	if ($1<$2) {
+		for i=$1,$2 {
+			Soma_IC.amp = 0.001 * i
+			continuerun(t+1000)
+			/*svstate = new SaveState()
+			svstate.save()
+			sprint(filename, "UpwardStates/state%d.dat",i)
+			f = new File(filename)
+			svstate.fwrite(f)*/
+		}
+	} else {
+		for(i=$1;i>$2;i-=1) {
+			Soma_IC.amp = 0.001 * i
+			continuerun(t+1000)		
+			/*svstate = new SaveState()
+			svstate.save()	
+			sprint(filename, "DownwardStates/state%d.dat",i)
+			f = new File(filename)
+			svstate.fwrite(f)*/
+		}
+	}
+}
+
+proc loadUpState() {
+	sprint(filename, "UpwardStates/state%d.dat",$1)
+	svstate = new SaveState()
+	f = new File(filename)
+	svstate.fread(f)
+	Soma_IC.del = 0
+	Soma_IC.dur = 3000000
+	Soma_IC.amp = 0.001 * $1
+}
+
+proc loadDownState() {
+	sprint(filename, "DownwardStates/state%d.dat",$1)
+	svstate = new SaveState()
+	f = new File(filename)
+	svstate.fread(f)
+	Soma_IC.del = 0
+	Soma_IC.dur = 3000000
+	Soma_IC.amp = 0.001 * $1
+}
+
+proc recordTraces() {
+	for (i=200; i>=150; i-=1) {
+		loadDownState(i)
+		init()
+		run()
+		bin.spikebin(mempot, 0)		// Counting the spikes
+  		print i, ": ", bin.sum(), " spikes"
+		sprint(filename, "Traces/DownwardTrace%d.txt",i)
+		f = new File()
+		f.wopen(filename)
+		mempot.printf(f)
+	}
+}
+
+//--------------------------------------------------------------------------------------
+// Perturbation GUI
+//--------------------------------------------------------------------------------------
+proc startPerturb() {
+	Soma_IC.amp += perturbAmp
+	Soma_IC.del = 0
+	Soma_IC.dur = tstop
+}
+
+proc stopPerturb() {
+	Soma_IC.amp -= perturbAmp
+}
+
+proc perturbationPanel(){
+	perturbAmp = 0
+	xpanel("Perturbation")
+	xvalue("Amp","perturbAmp", 1,"", 0, 0 )
+	xbutton("Start", "startPerturb()")
+	xbutton("Stop", "stopPerturb()")
+	xpanel(1,740)
+}

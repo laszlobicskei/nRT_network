@@ -1,0 +1,189 @@
+gpas_soma = cell.soma.g_pas
+Ra_soma = cell.soma.Ra
+naf_soma = cell.soma.gbar_naf2
+nap_soma = cell.soma.gbar_napf
+kdr_soma = cell.soma.gbar_kdr_fs
+kc_soma = cell.soma.gbar_kc
+ka_soma = cell.soma.gbar_ka
+km_soma = cell.soma.gbar_km
+kk2_soma = cell.soma.gbar_k2
+kahp_soma = cell.soma.gbar_kahp_slower
+cal_soma = cell.soma.gbar_cal
+cat_soma = cell.soma.gbar_cat_a
+ih_soma = cell.soma.gbar_ar
+
+gpas_axon = cell.axon[0].g_pas
+Ra_axon = cell.axon[0].Ra
+naf_axon = cell.axon[0].gbar_naf2
+kdr_axon = cell.axon[0].gbar_kdr_fs
+ka_axon = cell.axon[0].gbar_ka
+kk2_axon = cell.axon[0].gbar_k2
+
+gpas_proximal = cell.dend[0].g_pas
+Ra_proximal = cell.dend[0].Ra
+naf_proximal = cell.dend[0].gbar_naf2
+nap_proximal = cell.dend[0].gbar_napf
+kdr_proximal = cell.dend[0].gbar_kdr_fs
+kc_proximal = cell.dend[0].gbar_kc
+ka_proximal = cell.dend[0].gbar_ka
+km_proximal = cell.dend[0].gbar_km
+kk2_proximal = cell.dend[0].gbar_k2
+kahp_proximal = cell.dend[0].gbar_kahp_slower
+cal_proximal = cell.dend[0].gbar_cal
+cat_proximal = cell.dend[0].gbar_cat_a
+ih_proximal = cell.dend[0].gbar_ar
+
+gpas_distal = cell.dend[79].g_pas
+Ra_distal = cell.dend[79].Ra
+naf_distal = cell.dend[79].gbar_naf2
+nap_distal = cell.dend[79].gbar_napf
+kdr_distal = cell.dend[79].gbar_kdr_fs
+kc_distal = cell.dend[79].gbar_kc
+ka_distal = cell.dend[79].gbar_ka
+km_distal = cell.dend[79].gbar_km
+kk2_distal = cell.dend[79].gbar_k2
+kahp_distal = cell.dend[79].gbar_kahp_slower
+cal_distal = cell.dend[79].gbar_cal
+cat_distal = cell.dend[79].gbar_cat_a
+ih_distal = cell.dend[79].gbar_ar
+
+proc setAxonalConductancies(){
+	forsec cell.level[0] {	
+		g_pas = gpas_axon
+		Ra = Ra_axon
+		gbar_naf2 = naf_axon
+		gbar_kdr_fs =  kdr_axon
+		gbar_ka = ka_axon
+		gbar_k2 = kk2_axon
+	}
+}
+
+proc setSomaConductancies(){
+	forsec cell.level[1] {	
+		g_pas = gpas_soma
+		Ra = Ra_soma
+		gbar_naf2 = naf_soma
+		gbar_napf = nap_soma
+		gbar_kdr_fs = kdr_soma
+		gbar_kc = kc_soma
+		gbar_ka = ka_soma
+		gbar_km = km_soma
+		gbar_k2 = kk2_soma
+		gbar_kahp_slower = kahp_soma
+		gbar_cal = cal_soma
+		gbar_cat_a = cat_soma
+		gbar_ar = ih_soma
+	}
+}
+
+proc setDistalConductancies(){
+	forsec cell.level[4] {	
+		g_pas = gpas_distal
+		Ra = Ra_distal
+		gbar_naf2 = naf_distal
+		gbar_napf = nap_distal
+		gbar_kdr_fs =  kdr_distal
+		gbar_kc = kc_distal
+		gbar_ka = ka_distal
+		gbar_km = km_distal
+		gbar_k2 = kk2_distal
+		gbar_kahp_slower = kahp_distal
+		gbar_cal = cal_distal
+		gbar_cat_a = cat_distal
+		gbar_ar = ih_distal
+	}
+}
+
+proc setProximalConductancies(){
+	forsec cell.level[2] {	
+		g_pas = gpas_proximal
+		Ra = Ra_proximal
+		gbar_naf2 = naf_proximal
+		gbar_napf = nap_proximal
+		gbar_kdr_fs =  kdr_proximal
+		gbar_kc = kc_proximal
+		gbar_ka = ka_proximal
+		gbar_km = km_proximal
+		gbar_k2 = kk2_proximal
+		gbar_kahp_slower = kahp_proximal
+		gbar_cal = cal_proximal
+		gbar_cat_a = cat_proximal
+		gbar_ar = ih_proximal
+	}
+	forsec cell.level[3] {	
+		gpas = gpas_proximal
+		Ra = Ra_proximal
+		gbar_naf2 = naf_proximal
+		gbar_napf = nap_proximal
+		gbar_kdr_fs =  kdr_proximal
+		gbar_kc = kc_proximal
+		gbar_ka = ka_proximal
+		gbar_km = km_proximal
+		gbar_k2 = kk2_proximal
+		gbar_kahp_slower = kahp_proximal
+		gbar_cal = cal_proximal
+		gbar_cat_a = cat_proximal
+		gbar_ar = ih_proximal
+	}
+
+}
+
+
+proc conductancesPanel() {
+	xpanel("Axonal conductancies [mS/cm2]")
+	xvalue("Passive leak","gpas_axon", 1,"setAxonalConductancies()", 0, 0 )
+	xvalue("Axial resistance","Ra_axon", 1,"setAxonalConductancies()", 0, 0 )
+	xvalue("Transient Na","naf_axon", 1,"setAxonalConductancies()", 0, 0 )
+	xvalue("DR type K","kdr_axon", 1,"setAxonalConductancies()", 0, 0 )
+	xvalue("A type K","ka_axon", 1,"setAxonalConductancies()", 0, 0 )
+	xvalue("K2 type K","kk2_axon", 1,"setAxonalConductancies()", 0, 0 )
+	xpanel(0,909)
+
+	xpanel("Soma conductancies [mS/cm2]")
+	xvalue("Passive leak","gpas_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("Axial resistance","Ra_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("Transient Na","naf_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("Persistent Na","nap_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("L type Ca","cal_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("T type Ca","cat_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("Ih","ih_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("DR type K","kdr_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("C type K","kc_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("A type K","ka_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("M type K","km_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("K2 type K","kk2_soma", 1,"setSomaConductancies()", 0, 0 )
+	xvalue("AHP type K","kahp_soma", 1,"setSomaConductancies()", 0, 0 )
+	xpanel(284,697)
+
+	xpanel("Proximal conductancies [mS/cm2]")
+	xvalue("Passive leak","gpas_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("Axial resistance","Ra_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("Persistent Na","nap_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("Transient Na","naf_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("L type Ca","cal_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("T type Ca","cat_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("Ih","ih_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("DR type K","kdr_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("C type K","kc_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("A type K","ka_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("M type K","km_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("K2 type K","kk2_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xvalue("AHP type K","kahp_proximal", 1,"setProximalConductancies()", 0, 0 )
+	xpanel(601,696)
+
+	xpanel("Distal conductancies [mS/cm2]")
+	xvalue("Passive leak","gpas_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("Axial resistance","Ra_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("Persistent Na","nap_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("Transient Na","naf_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("L type Ca","cal_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("T type Ca","cat_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("Ih","ih_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("DR type K","kdr_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("C type K","kc_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("A type K","ka_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("M type K","km_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("K2 type K","kk2_distal", 1,"setDistalConductancies()", 0, 0 )
+	xvalue("AHP type K","kahp_distal", 1,"setDistalConductancies()", 0, 0 )
+	xpanel(918,694)
+}

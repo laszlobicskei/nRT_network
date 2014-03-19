@@ -9,6 +9,7 @@ begintemplate nRT
 	  geom()
 	  biophys()
 	  geom_nseg()
+	  soma_correction()
 	}
 		
 	proc topol() { local i
@@ -1939,16 +1940,21 @@ begintemplate nRT
 		 ceiling_cad = 1e6 				//  nearly unlimited Ca concentration
 		 forsec all {                   // global reversal potentials
 			ek =  -100.
-			e_pas =  -75.
+			e_pas =  -75.6
 			ena =   50.
 			vca =   125.
-			if (ismembrane("ar")) {
-				erev_ar =  -40.
-				m0_ar = 0
-			}
+			forsec all if (ismembrane("ar")) erev_ar =  -40.
 			e_gaba_a =  -75.
 		 }
+		 
+		 forsec all if (ismembrane("ar")) { m0_ar = 0 }
 	}
+	
+	proc soma_correction() {
+		soma.diam = 30
+		soma.L = 30
+	}
+	
 	access soma
 
 endtemplate nRT
